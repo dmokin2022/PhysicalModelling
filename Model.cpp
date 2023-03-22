@@ -50,10 +50,6 @@ public:
     }
     virtual ~Particle() {}
 
-//    Particle operator=(Particle p) {
-//       return p;
-//    }
-
     bool connectedWithNeighbours = false;
 
     physvalue getSumForce() {
@@ -80,29 +76,29 @@ public:
 class Spring : public QObject {
     Q_OBJECT
 public:
-    Particle p1;
-    Particle p2;
+    Particle *p1;
+    Particle *p2;
     physvalue k;
     physvalue dx;
     physvalue dy;
     physvalue l;    // длина пружины. Опрделяется по начальному расстоянию между частицами
 
 
-    Spring(Particle p1, Particle p2, physvalue k = 1) {
-        this->p1 = p1;
-        this->p2 = p2;
+    Spring(Particle &p1, Particle &p2, physvalue k = 1) {
+        this->p1 = &p1;
+        this->p2 = &p2;
         this->k = k;
-        physvalue dx = p2.x - p1.x;
-        physvalue dy = p2.y - p1.y;
-        physvalue l = sqrt(dx*dx + dy*dy);    // длина пружины. Опрделяется по начальному расстоянию между частицами
+        dx = p2.x - p1.x;
+        dy = p2.y - p1.y;
+        l = sqrt(dx*dx + dy*dy);    // длина пружины. Опрделяется по начальному расстоянию между частицами
     }
 
     virtual ~Spring() {}
 
     void computeHookForce() {
         // Определяем текущее расстояние между частицами
-        dx = p2.x - p1.x;
-        dy = p2.y - p1.y;
+        dx = p2->x - p1->x;
+        dy = p2->y - p1->y;
         physvalue lnew = sqrt(dx*dx + dy*dy);
 
         // Вычисляем разницу между текущим расстоянием и тем, что было при создании пружины
@@ -115,15 +111,16 @@ public:
         physvalue Fhy = dy/lnew*Fh;
 
         // прибавляем составляющие силы Гука к сумме всех сил, действующих на частицы, соединяемые пружиной
-        p1.Fx += Fhx;   // к одной частице со знаком +
-        p1.Fy += Fhy;
+        p1->Fx += Fhx;   // к одной частице со знаком +
+        p1->Fy += Fhy;
 
-        p2.Fx -= Fhx;   // к другой частице со знаком -
-        p2.Fy -= Fhy;
+        p2->Fx -= Fhx;   // к другой частице со знаком -
+        p2->Fy -= Fhy;
     }
 };
 
 class Wall: public QObject {
+public:
     physvalue top = -10;
     physvalue bottom = 20;
     physvalue left = -10;
@@ -179,8 +176,8 @@ class Space: public QObject {
     void addParticleArray(physvalue x, physvalue y, physvalue r, physvalue m, int count, physvalue distance) {
         physvalue squareSide = floor(sqrt(count));
 
-        for i in range(squareSide)
-            for j in range(squareSide)
+        for (int i = 0; i < squareSide; i++)
+            for (int j = 0; j < squareSide; j++)
                 addParticle(x + i*distance, y + j*distance, r, m);
     }
 
@@ -192,31 +189,35 @@ class Space: public QObject {
                                     physvalue x2, physvalue y2,
                                     physvalue r, physvalue k) {
         // создание отдельного списка для частиц, входящих в выделенный прямоугольник
-        connectedParticles = list();
+        QVector<Particle> connectedParticles;
 
         // Проходим циклом по всем частицам
-        for i in range(len(particles)) {
+        for (auto &particle : particles) {
             // Если частица попадает в заданный прямоугольник
-            if ((particles[i].x > x1) & (particles[i].x < x2))
-                if ((particles[i].y > y1) & (particles[i].y < y2))
+            if ((particle.x > x1) & (particle.x < x2))
+                if ((particle.y > y1) & (particle.y < y2))
+                    connectedParticles.append(particle);
+        //for (int i = 0; i < particles.size(); i++) {
+            //if ((particles[i].x > x1) & (particles[i].x < x2))
+                //if ((particles[i].y > y1) & (particles[i].y < y2))
                     // Записываем частицу в специальный список
-                    connectedParticles.append(particles[i]);
+                    //connectedParticles.append(particles[i]);
         }
 
         // Проходим циклом по всем выбранным частицам
-        for i in range(len(connectedParticles)) {
-            p1 = connectedParticles[i];
-            for j in range(i+1, len(connectedParticles)) {
-                p2 = connectedParticles[j];
-                if (!p2.connectedWithNeighbours) {
+        for (int i = 0; i < connectedParticles.size(); i++) {
+            Particle *p1 = &connectedParticles[i];
+            for (int j = i + 1; j < connectedParticles.size(); j++) {
+                Particle *p2 = &connectedParticles[j];
+                if (!p2->connectedWithNeighbours) {
                     // Определяем расстояние между частицами
-                    dx = p2.x - p1.x;
-                    dy = p2.y - p1.y;
+                    dx = p2->x - p1->x;
+                    dy = p2->y - p1->y;
                     sqrL = dx*dx + dy*dy;
 
                     if (sqrL < r*r) {    // Если расстояние между частицами меньше заданного r, то...
                         //... устанавливаем пружинную связь между частицами
-                        springs.append(Spring(p1, p2, k));  // Сахраняем пружину в список пружин
+                        springs.append(Spring(p1, p2, k));  // сохраняем пружину в список пружин
                         p1.springLinksCounter += 1;
                     }
                 }
@@ -228,24 +229,22 @@ class Space: public QObject {
     }
 
     // Расчёт силы гравитации на частицу
-    void computeGravityForce(Particle p1) {
+    void computeGravityForce(Particle &p1) {
         p1.Fx += p1.m*gx;
         p1.Fy += p1.m*gy;
     }
 
     void computeAllForces() {
         // Цикл прохода по всем частицам в пространстве
-        for i in range(len(particles)) {
-            p = particles[i];
+        for (auto &particle : particles) {
             // Обнуляем все силы, действующие на частицу для дальнейшего перерасчёта
-            p.Fx = 0;
-            p.Fy = 0;
-            computeGravityForce(p);     // расчёт силы гравитации, действующей на частицу
+            particle.Fx = 0;
+            particle.Fy = 0;
+            computeGravityForce(particle);     // расчёт силы гравитации, действующей на частицу
         }
 
         // Цикл прохода по всем пружинам в списке
-        for i in range(len(springs)) {
-            spring = springs[i];
+        for (auto &spring : springs) {
             // вычисляем силу упругости по закону Гука
             spring.computeHookForce();
         }
@@ -254,7 +253,7 @@ class Space: public QObject {
 
 
     // Функция расчёта столкновения двух частиц
-    void computeCollisionBetwinParticles(Particle p1, Particle p2) {
+    void computeCollisionBetwinParticles(Particle &p1, Particle &p2) {
 
         // Проверка знаменателя дроби на 0 (чтобы избежать ошибки деления на 0)
         if (dx <= almostZero) {
@@ -302,7 +301,7 @@ class Space: public QObject {
 
     // Функция "разлепивания" частиц если они наползают друг на друга
     // (упрощение вместо "правильного" расчёта столкновения между кадрами)
-    void unstickPartcles(Particle p1, p2) {
+    void unstickPartcles(Particle &p1, Particle &p2) {
         physvalue d = p1.r + p2.r - L;
         physvalue k = 0.5*d/L;
         physvalue dx = k*dx;   // насколько вернуть частицы по x
@@ -318,7 +317,7 @@ class Space: public QObject {
     }
 
 
-    void detectCollisionBetwinParticles(Particle p1, Particle p2) {
+    void detectCollisionBetwinParticles(Particle &p1, Particle &p2) {
         physvalue sumR = p1.r + p2.r;  // сумма радиусов двух частиц
         physvalue dx = p1.x - p2.x;  // разность по x
         physvalue dy = p1.y - p2.y;  // разность по y
@@ -326,7 +325,7 @@ class Space: public QObject {
         if (abs(dx) <= sumR) {
             if (abs(dy) <= sumR) {
                 sqrL = dx*dx + dy*dy;  // расчёт квадрата расстояния между частицами
-                L = math.sqrt(sqrL);
+                L = sqrt(sqrL);
                 if (sqrL <= sumR*sumR) {
                     unstickPartcles(p1, p2);
                     computeCollisionBetwinParticles(p1, p2);
@@ -336,7 +335,7 @@ class Space: public QObject {
     }
 
 
-    void detectCollisionWithWalls(self, p1) {
+    void detectCollisionWithWalls(Particle &p1) {
         // Если частица "сталкивается" с левой стеной
         if ((p1.x - p1.r) <= wall.left) {
             // Расчёт соударения с левой/правой стеной
@@ -387,7 +386,7 @@ class Space: public QObject {
     //             detectCollisionBetwinParticles(p1, p2)
 
 
-    void computeTimeFrame(self) {
+    void computeTimeFrame() {
 
         computeAllForces();     // расчёт всех, действующих на частицу сил
 
