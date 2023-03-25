@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    view = new View();
 
     // Установка окна для прорисовки графического вида физической модели
     ui->graphicsView->setScene(view->scene);

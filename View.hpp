@@ -30,6 +30,7 @@ public:
     QTimer timer;
 
     View();
+    ~View(){};
 
     void initDraw();
 

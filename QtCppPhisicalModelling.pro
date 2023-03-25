@@ -19,10 +19,10 @@ SOURCES += \
     C_Box.cpp \
     main.cpp \
     mainwindow.cpp \
-    View.cpp  \
     A_Particle.cpp \
     B_Spring.cpp \
     D_Space.cpp \
+    View.cpp  \
 
 HEADERS += \
     C_Box.hpp \
@@ -31,6 +31,7 @@ HEADERS += \
     A_Particle.hpp \
     B_Spring.hpp \
     D_Space.hpp \
+    View.hpp \
 
 
 FORMS += \
