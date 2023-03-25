@@ -17,20 +17,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     C_Box.cpp \
+    Model/Box.cpp \
     main.cpp \
     mainwindow.cpp \
-    A_Particle.cpp \
-    B_Spring.cpp \
-    D_Space.cpp \
+    Model/A_Particle.cpp \
+    Model/B_Spring.cpp \
+    Model/Box.cpp \
+    Model/D_Space.cpp \
     View.cpp  \
 
 HEADERS += \
     C_Box.hpp \
+    Model/Box.hpp \
     mainwindow.h \
-    A_PhysicalValues.hpp \
-    A_Particle.hpp \
-    B_Spring.hpp \
-    D_Space.hpp \
+    Model/A_PhysicalValues.hpp \
+    Model/A_Particle.hpp \
+    Model/Box.hpp \
+    Model/D_Space.hpp \
     View.hpp \
 
 

@@ -1,8 +1,8 @@
 
-#include "A_Particle.hpp"
-#include "B_Spring.hpp"
-#include "C_Box.hpp"
-#include "D_Space.hpp"
+#include "Model/A_Particle.hpp"
+#include "Model/B_Spring.hpp"
+#include "Model/Box.hpp"
+#include "Model/D_Space.hpp"
 
 #include <QGraphicsItemGroup>
 #include <QGraphicsScene>

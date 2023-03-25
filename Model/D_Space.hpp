@@ -1,9 +1,11 @@
 #include "A_Particle.hpp"
 #include "B_Spring.hpp"
-#include "C_Box.hpp"
+#include "Box.hpp"
+
+#include <QVector>
 
 // Описание пространства для физического взаимодействия
-class Space: public QObject {
+class Space {
 public:
     // Статические переменные для расчётов
     physvalue sumR = 0; // сумма радиусов двух расчётных частиц
