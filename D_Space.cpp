@@ -1,162 +1,13 @@
-//import math
-////include
+#include "D_Space.hpp"
 
-#include <QObject>
-#include <cmath>
+Space::Space() {
+    sumR = 0; // сумма радиусов двух расчётных частиц
+    dx = 0;   // разность по x между двумя расчётными частицами
+    dy = 0;   // разность по y между двумя расчётными частицами
+    sqrL = 0; // квадрат расстояния между двумя расчётными частицами
+    L = 0;    // расстояние между двумя расчётными частицами
 
-typedef double physvalue;
-
-const static physvalue dt = 0.01;
-
-class Particle: public QObject
-{
-    Q_OBJECT
-public:
-
-    physvalue x;    // Координаты
-    physvalue y;
-    physvalue z;
-
-    physvalue r;    // радиус
-    physvalue m;    // масса
-
-
-    physvalue Fx;   // проекции силы
-    physvalue Fy;
-    physvalue ax;   // проекции ускорения
-    physvalue ay;
-    physvalue vx;   // проекции скорости
-    physvalue vy;
-
-    int springLinksCounter; // счётчик числа связей частицы с другими частицами
-
-    Particle(physvalue x, physvalue y, physvalue r = 1, physvalue m = 1) {
-        this->x = x;
-        this->y = y;
-        this->r = r;
-        this->m = m;
-
-        Fx = 0;
-        Fy = 0;
-        ax = 0;
-        ay = 0;
-
-        vx = 0;
-        vy = 0;
-
-        connectedWithNeighbours = false;    // признак связанности частицы с соседними частицами
-                                            // (нужно для расчёта поведения упругого тела из частиц)
-        springLinksCounter = 0; // счётчик числа связей частицы с другими частицами
-    }
-    virtual ~Particle() {}
-
-    bool connectedWithNeighbours = false;
-
-    physvalue getSumForce() {
-        return 1;
-    }
-
-    void computeAcceleration() {
-        ax = Fx/m;
-        ay = Fy/m;
-    }
-
-    void computeVelocity() {
-        vx = vx + ax*dt;
-        vy = vy + ay*dt;
-    }
-
-    void computeMovement() {
-        x = x + vx*dt;
-        y = y + vy*dt;
-    }
-};
-
-// Объект пружина для создания упругих тел
-class Spring : public QObject {
-    Q_OBJECT
-public:
-    Particle *p1;
-    Particle *p2;
-    physvalue k;
-    physvalue dx;
-    physvalue dy;
-    physvalue l;    // длина пружины. Опрделяется по начальному расстоянию между частицами
-
-
-    Spring(Particle &p1, Particle &p2, physvalue k = 1) {
-        this->p1 = &p1;
-        this->p2 = &p2;
-        this->k = k;
-        dx = p2.x - p1.x;
-        dy = p2.y - p1.y;
-        l = sqrt(dx*dx + dy*dy);    // длина пружины. Опрделяется по начальному расстоянию между частицами
-    }
-
-    virtual ~Spring() {}
-
-    void computeHookForce() {
-        // Определяем текущее расстояние между частицами
-        dx = p2->x - p1->x;
-        dy = p2->y - p1->y;
-        physvalue lnew = sqrt(dx*dx + dy*dy);
-
-        // Вычисляем разницу между текущим расстоянием и тем, что было при создании пружины
-        physvalue dl = lnew - l;  // если пружина сжалась, то dl отрицательное, если растянулась, то dl положительное
-
-        physvalue Fh = k*dl;  // Вычисляем силу упругости Гука по закону Гука
-
-        // вычисление составляющих силы Гука через единичный вектор расстояния между двумя частицами
-        physvalue Fhx = dx/lnew*Fh;
-        physvalue Fhy = dy/lnew*Fh;
-
-        // прибавляем составляющие силы Гука к сумме всех сил, действующих на частицы, соединяемые пружиной
-        p1->Fx += Fhx;   // к одной частице со знаком +
-        p1->Fy += Fhy;
-
-        p2->Fx -= Fhx;   // к другой частице со знаком -
-        p2->Fy -= Fhy;
-    }
-};
-
-class Box: public QObject {
-public:
-    physvalue top = -10;
-    physvalue bottom = 20;
-    physvalue left = -10;
-    physvalue right = 40;
-};
-
-const physvalue almostZero = 0.0001;
-
-// Описание пространства для физического взаимодействия
-class Space: public QObject {
-
-    // Статические переменные для расчётов
-    physvalue sumR = 0; // сумма радиусов двух расчётных частиц
-    physvalue dx = 0;   // разность по x между двумя расчётными частицами
-    physvalue dy = 0;   // разность по y между двумя расчётными частицами
-    physvalue sqrL = 0; // квадрат расстояния между двумя расчётными частицами
-    physvalue L = 0;    // расстояние между двумя расчётными частицами
-
-    // Ускорение свободного падения (гравитация) по осям
-    physvalue gx = 0;
-    physvalue gy = 9.8;
-
-    physvalue dt;   // время просчёта одного кадра
-
-    int framesCount; // количество просчитанных кадров
-    int particlesCount; // количество частиц
-
-    physvalue decay;   // Коэффициент затухания (используется при соударениях)
-
-    Box wall;
-
-    QVector<Particle> particles;    // Список всех частиц, присутствующих в пространстве
-    QVector<Spring> springs;        // Список всех пружин, присутствующих в пространстве
-
-    Space(physvalue dt = 0.001) {
-        this->dt = dt;    // время просчёта одного кадра
+        this->dt = dt_;    // время просчёта одного кадра
         framesCount = 0; // количество просчитанных кадров
         particlesCount = 0; // количество частиц
 
@@ -168,12 +19,20 @@ class Space: public QObject {
     }
 
     // Добавление одной частицы
-    void addParticle(physvalue x, physvalue y, physvalue r, physvalue m) {
-        particles.append(Particle(x, y, r, m));
+    void Space::addParticle(physvalue x, physvalue y, physvalue r, physvalue m) {
+
+        //particles.append(Particle(x, y, r, m));
+        //Particle p(x, y, r, m);
+        Particle *p = new Particle(x, y, r, m);
+        particles.append(*p);
+
+        p->x = 1000;
+        p->y = 1000;
+        delete p;
     }
 
     // Добавление квадратного массива из одинаковых частиц
-    void addParticleArray(physvalue x, physvalue y, physvalue r, physvalue m, int count, physvalue distance) {
+    void Space::addParticleArray(physvalue x, physvalue y, physvalue r, physvalue m, int count, physvalue distance) {
         physvalue squareSide = floor(sqrt(count));
 
         for (int i = 0; i < squareSide; i++)
@@ -181,11 +40,11 @@ class Space: public QObject {
                 addParticle(x + i*distance, y + j*distance, r, m);
     }
 
-    void addSpring(Particle p1, Particle p2, physvalue k) {
+    void Space::addSpring(Particle p1, Particle p2, physvalue k) {
         springs.append(Spring(p1, p2, k));
     }
 
-    void addSpringsToParticlesGroup(physvalue x1, physvalue y1,
+    void Space::addSpringsToParticlesGroup(physvalue x1, physvalue y1,
                                     physvalue x2, physvalue y2,
                                     physvalue r, physvalue k) {
         // создание отдельного списка для частиц, входящих в выделенный прямоугольник
@@ -230,12 +89,12 @@ class Space: public QObject {
     }
 
     // Расчёт силы гравитации на частицу
-    void computeGravityForce(Particle &p1) {
+    void Space::computeGravityForce(Particle &p1) {
         p1.Fx += p1.m*gx;
         p1.Fy += p1.m*gy;
     }
 
-    void computeAllForces() {
+    void Space::computeAllForces() {
         // Цикл прохода по всем частицам в пространстве
         for (auto &particle : particles) {
             // Обнуляем все силы, действующие на частицу для дальнейшего перерасчёта
@@ -254,7 +113,7 @@ class Space: public QObject {
 
 
     // Функция расчёта столкновения двух частиц
-    void computeCollisionBetwinParticles(Particle &p1, Particle &p2) {
+    void Space::computeCollisionBetwinParticles(Particle &p1, Particle &p2) {
 
         // Проверка знаменателя дроби на 0 (чтобы избежать ошибки деления на 0)
         if (dx <= almostZero) {
@@ -302,23 +161,23 @@ class Space: public QObject {
 
     // Функция "разлепивания" частиц если они наползают друг на друга
     // (упрощение вместо "правильного" расчёта столкновения между кадрами)
-    void unstickPartcles(Particle &p1, Particle &p2) {
+    void Space::unstickPartcles(Particle &p1, Particle &p2) {
         physvalue d = p1.r + p2.r - L;
         physvalue k = 0.5*d/L;
-        physvalue dx = k*dx;   // насколько вернуть частицы по x
-        physvalue dy = k*dy;   // насколько вернуть частицы по y
+        physvalue dx_ = k*dx;   // насколько вернуть частицы по x
+        physvalue dy_ = k*dy;   // насколько вернуть частицы по y
 
         // Изменяем координаты частицы 1
-        p1.x = p1.x + dx;
-        p1.y = p1.y + dy;
+        p1.x = p1.x + dx_;
+        p1.y = p1.y + dy_;
 
         // Изменяем координаты частицы 2
-        p2.x = p2.x - dx;
-        p2.y = p2.y - dy;
+        p2.x = p2.x - dx_;
+        p2.y = p2.y - dy_;
     }
 
 
-    void detectCollisionBetwinParticles(Particle &p1, Particle &p2) {
+    void Space::detectCollisionBetwinParticles(Particle &p1, Particle &p2) {
         physvalue sumR = p1.r + p2.r;  // сумма радиусов двух частиц
         physvalue dx = p1.x - p2.x;  // разность по x
         physvalue dy = p1.y - p2.y;  // разность по y
@@ -336,7 +195,7 @@ class Space: public QObject {
     }
 
 
-    void detectCollisionWithWalls(Particle &p1) {
+    void Space::detectCollisionWithWalls(Particle &p1) {
         // Если частица "сталкивается" с левой стеной
         if ((p1.x - p1.r) <= wall.left) {
             // Расчёт соударения с левой/правой стеной
@@ -387,7 +246,7 @@ class Space: public QObject {
     //             detectCollisionBetwinParticles(p1, p2)
 
 
-    void computeTimeFrame() {
+    void Space::computeTimeFrame() {
 
         computeAllForces();     // расчёт всех, действующих на частицу сил
 
@@ -415,7 +274,7 @@ class Space: public QObject {
             p1.computeMovement();
         }
     }
-};
+
 
 //if __name__ == '__main__':
 //    space = Space();

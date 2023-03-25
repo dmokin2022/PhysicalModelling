@@ -16,14 +16,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    C_Box.cpp \
     main.cpp \
     mainwindow.cpp \
-    Controller.cpp \
-    Model.cpp \
-    View.cpp
+    View.cpp  \
+    A_Particle.cpp \
+    B_Spring.cpp \
+    D_Space.cpp \
 
 HEADERS += \
-    mainwindow.h
+    C_Box.hpp \
+    mainwindow.h \
+    A_PhysicalValues.hpp \
+    A_Particle.hpp \
+    B_Spring.hpp \
+    D_Space.hpp \
 
 
 FORMS += \
