@@ -16,8 +16,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    C_Box.cpp \
-    Model/Box.cpp \
     main.cpp \
     mainwindow.cpp \
     Model/A_Particle.cpp \
@@ -27,8 +25,6 @@ SOURCES += \
     View.cpp  \
 
 HEADERS += \
-    C_Box.hpp \
-    Model/Box.hpp \
     mainwindow.h \
     Model/A_PhysicalValues.hpp \
     Model/A_Particle.hpp \
