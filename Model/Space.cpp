@@ -15,7 +15,7 @@ Space::Space() {
   gx = 0;
   gy = 9.8;
 
-  decay = 0.99;  // Коэффициент затухания (используется при соударениях)
+  decay = 0.999;  // Коэффициент затухания (используется при соударениях)
 }
 
 // Добавление одной частицы
@@ -24,10 +24,6 @@ void Space::addParticle(physvalue x, physvalue y, physvalue r, physvalue m) {
   //Particle p(x, y, r, m);
   Particle *p = new Particle(x, y, r, m);
   particles.append(p);  // в массив помещается копия объекта
-
-  //  p->x = 1000;  //
-  //  p->y = 1000;
-  //  delete p;
 }
 
 // Добавление квадратного массива из одинаковых частиц
@@ -53,12 +49,9 @@ void Space::addSpringsToParticlesGroup(
   for (auto particle : particles) {
     // Если частица попадает в заданный прямоугольник
     if ((particle->x > x1) & (particle->x < x2))
-      if ((particle->y > y1) & (particle->y < y2)) connectedParticles.append(particle);
-    //for (int i = 0; i < particles.size(); i++) {
-    //if ((particles[i].x > x1) & (particles[i].x < x2))
-    //if ((particles[i].y > y1) & (particles[i].y < y2))
-    // Записываем частицу в специальный список
-    //connectedParticles.append(particles[i]);
+      if ((particle->y > y1) & (particle->y < y2))
+          // Записываем частицу в специальный список
+          connectedParticles.append(particle);
   }
 
   // Проходим циклом по всем выбранным частицам
@@ -144,22 +137,34 @@ void Space::computeCollisionBetwinParticles(Particle &p1, Particle &p2) {
   p2.vy = v2pxnew * sina + v2py * cosa;
 
   // учёт затухания при соударениях
-  // p1.vx *= decay;
-  // p1.vy *= decay;
-  //
-  // p2.vx *= decay;
-  // p2.vy *= decay;
+   p1.vx *= decay;
+   p1.vy *= decay;
+
+   p2.vx *= decay;
+   p2.vy *= decay;
 }
 
 // Функция "разлепивания" частиц если они наползают друг на друга
 // (упрощение вместо "правильного" расчёта столкновения между кадрами)
-// TODO Разобраться с правильным расчётом с учётом статических переменных
-// ОШИБКА!!!
 void Space::unstickPartcles(Particle &p1, Particle &p2) {
-  physvalue d   = p1.r + p2.r - L;
-  physvalue k   = 0.5 * d / L;
-  physvalue dx_ = k * dx;  // насколько вернуть частицы по x
-  physvalue dy_ = k * dy;  // насколько вернуть частицы по y
+  // "Нахлёст" частиц друг на друга
+  physvalue d   = (p1.r + p2.r) - L;
+  // l - вектор между центрами частиц
+  physvalue lx = p1.x - p2.x;
+  physvalue ly = p1.y - p2.y;
+  // Единичный вектор между центрами частиц
+  physvalue l1x = lx/L;
+  physvalue l1y = ly/L;
+
+  // Некорректное "разлипание" частиц
+//  physvalue k   = 0.5 * d / L;
+//  physvalue dx_ = k * dx;  // насколько вернуть частицы по x
+//  physvalue dy_ = k * dy;  // насколько вернуть частицы по y
+
+  // Корректное разлипание частиц
+  physvalue dx_ = l1x * d;  // насколько вернуть частицы по x
+    physvalue dy_ = l1y * d;  // насколько вернуть частицы по y
+
 
   // Изменяем координаты частицы 1
   p1.x = p1.x + dx_;
@@ -171,9 +176,11 @@ void Space::unstickPartcles(Particle &p1, Particle &p2) {
 }
 
 void Space::detectCollisionBetwinParticles(Particle &p1, Particle &p2) {
-  physvalue sumR = p1.r + p2.r;  // сумма радиусов двух частиц
-  physvalue dx   = p1.x - p2.x;  // разность по x
-  physvalue dy   = p1.y - p2.y;  // разность по y
+  // Здесь была ошибка:
+  // sumR, dx, dy - временные расчётные переменные класса
+  sumR = p1.r + p2.r;  // сумма радиусов двух частиц
+  dx   = p1.x - p2.x;  // разность по x
+  dy   = p1.y - p2.y;  // разность по y
 
   if (abs(dx) <= sumR) {
     if (abs(dy) <= sumR) {
