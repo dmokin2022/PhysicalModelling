@@ -153,6 +153,8 @@ void Space::computeCollisionBetwinParticles(Particle &p1, Particle &p2) {
 
 // Функция "разлепивания" частиц если они наползают друг на друга
 // (упрощение вместо "правильного" расчёта столкновения между кадрами)
+// TODO Разобраться с правильным расчётом с учётом статических переменных
+// ОШИБКА!!!
 void Space::unstickPartcles(Particle &p1, Particle &p2) {
   physvalue d   = p1.r + p2.r - L;
   physvalue k   = 0.5 * d / L;
