@@ -1,49 +1,58 @@
 
+#include <QBrush>
+#include <QColor>
+#include <QGraphicsItemGroup>
+#include <QGraphicsScene>
+#include <QPainter>
+#include <QTimer>
+
 #include "Model/A_Particle.hpp"
 #include "Model/B_Spring.hpp"
 #include "Model/Box.hpp"
 #include "Model/D_Space.hpp"
 
-#include <QGraphicsItemGroup>
-#include <QGraphicsScene>
-#include <QTimer>
-
-class View: public QObject {
-    Q_OBJECT
+class View : public QObject {
+  Q_OBJECT
 public:
-    physvalue scale; // Масштабирующий коэффициент. Сколько точек экрана приходится на единичный отрезок в пространстве модели
+  // Масштабирующий коэффициент. Сколько точек экрана приходится на единичный отрезок в пространстве модели
+  physvalue scale;
 
-    physvalue offsetX = 0;    // Точка пространства модели, отображаемая в левой верхней части экрана (смщещение по x и y)
-    physvalue offsetY = 0;
-    physvalue framesPerSecond = 100;   // Количество кадров моделирования в секунду
+  // Точка пространства модели, отображаемая в левой верхней части экрана (смщещение по x и y)
+  physvalue offsetX = 0;
+  physvalue offsetY = 0;
+  physvalue framesPerSecond = 100;  // Количество кадров моделирования в секунду
 
-    bool simulationIsStarted = false;    // Флаг признака того, что процесс симуляции запущен
+  bool simulationIsStarted = false;  // Флаг признака того, что процесс симуляции запущен
 
-    Space space;
+  Space space;
 
-    // Создаём объект для графической сцены
-    QGraphicsScene *scene;
-    QGraphicsItemGroup *boxGroup;
-    QGraphicsItemGroup *particlesGroup;
+  // Создаём объект для графической сцены
+  QGraphicsScene *scene;
+  QGraphicsItemGroup *boxGroup;
+  QGraphicsItemGroup *particlesGroup;
 
-    // Настройка таймера для генерации кадров
-    QTimer timer;
+  //  QPainter *painter;
+  //  QPen *pen;
+  //  QColor &color;
+  //  QBrush &brush;
 
-    View();
-    ~View(){};
+  // Настройка таймера для генерации кадров
+  QTimer timer;
 
-    void initDraw();
+  View();
+  ~View() {};
 
-    void drawModel();
+  void initDraw();
 
-    void test();
+  void drawModel();
+
+  void test();
 
 public slots:
-    void showFrame();   // обработчик таймера
-    // Обработчика нажатия на кнопку Пуск/Стоп
-    void oneStepSimulation();
-    void togleSimulation();
-
+  void showFrame();  // обработчик таймера
+  // Обработчика нажатия на кнопку Пуск/Стоп
+  void oneStepSimulation();
+  void togleSimulation();
 };
 
 //if __name__ == '__main__':

@@ -1,45 +1,42 @@
 
+#include "A_Particle.hpp"
+
 #include <QObject>
 #include <cmath>
 
-#include "A_Particle.hpp"
-
-
 Particle::Particle(physvalue x, physvalue y, physvalue r, physvalue m) {
-        this->x = x;
-        this->y = y;
-        this->r = r;
-        this->m = m;
+  this->x = x;
+  this->y = y;
+  this->z = 0;
+  this->r = r;
+  this->m = m;
 
-        Fx = 0;
-        Fy = 0;
-        ax = 0;
-        ay = 0;
+  Fx = 0;
+  Fy = 0;
+  ax = 0;
+  ay = 0;
 
-        vx = 0;
-        vy = 0;
+  vx = 0;
+  vy = 0;
 
-        connectedWithNeighbours = false;    // признак связанности частицы с соседними частицами
-                                            // (нужно для расчёта поведения упругого тела из частиц)
-        springLinksCounter = 0; // счётчик числа связей частицы с другими частицами
+  connectedWithNeighbours = false;  // признак связанности частицы с соседними частицами
+      // (нужно для расчёта поведения упругого тела из частиц)
+  springLinksCounter = 0;  // счётчик числа связей частицы с другими частицами
 }
 
-
-physvalue Particle::getSumForce() {
-        return 1;
-}
+physvalue Particle::getSumForce() { return 1; }
 
 void Particle::computeAcceleration() {
-        ax = Fx/m;
-        ay = Fy/m;
+  ax = Fx / m;
+  ay = Fy / m;
 }
 
 void Particle::computeVelocity() {
-        vx = vx + ax*dt_;
-        vy = vy + ay*dt_;
+  vx = vx + ax * dt_;
+  vy = vy + ay * dt_;
 }
 
 void Particle::computeMovement() {
-        x = x + vx*dt_;
-        y = y + vy*dt_;
+  x = x + vx * dt_;
+  y = y + vy * dt_;
 }
