@@ -1,4 +1,4 @@
-#include "D_Space.hpp"
+#include "Space.hpp"
 
 Space::Space() {
   sumR = 0;  // сумма радиусов двух расчётных частиц

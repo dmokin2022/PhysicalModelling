@@ -5,9 +5,9 @@ View::View() {
   // Масштабирующий коэффициент. Сколько точек экрана приходится на единичный отрезок в пространстве модели
   scale = 10;
   // Точка пространства модели, отображаемая в левой верхней части экрана (смщещение по x и y)
-  offsetX         = 0;
-  offsetY         = 0;
-  framesPerSecond = 20;  // Количество кадров моделирования в секунду
+  offsetX = 0;
+  offsetY = 0;
+  //framesPerSecond = 20;  // Количество кадров моделирования в секунду
 
   simulationIsStarted = false;  // Флаг признака того, что процесс симуляции запущен
 
@@ -70,7 +70,8 @@ void View::drawModel() {
     int sw = sh;
 
     // добавляем эллипс/круг в экранную группу изображений
-    particlesGroup->addToGroup(scene->addEllipse(sx, sy, sw, sh));
+    QPen pen(p->color);
+    particlesGroup->addToGroup(scene->addEllipse(sx, sy, sw, sh, pen));
 
     // Выводим координаты частицы для отладки
     // xystr = str(str(p.x) + "," + str(p.y))
@@ -89,8 +90,9 @@ void View::drawModel() {
     int sx2 = (spring.p2->x - offsetX) * scale;
     int sy2 = (spring.p2->y - offsetY) * scale;
 
+    QPen pen(Qt::red);
     // добавляем линию в экранную группу изображений
-    particlesGroup->addToGroup(scene->addLine(sx1, sy1, sx2, sy2));
+    particlesGroup->addToGroup(scene->addLine(sx1, sy1, sx2, sy2, pen));
   }
 
   // win.graphicsView.setScene(scene)

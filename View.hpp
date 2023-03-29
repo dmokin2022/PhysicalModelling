@@ -6,10 +6,10 @@
 #include <QPainter>
 #include <QTimer>
 
-#include "Model/A_Particle.hpp"
-#include "Model/B_Spring.hpp"
 #include "Model/Box.hpp"
-#include "Model/D_Space.hpp"
+#include "Model/Particle.hpp"
+#include "Model/Space.hpp"
+#include "Model/Spring.hpp"
 
 class View : public QObject {
   Q_OBJECT
@@ -20,7 +20,7 @@ public:
   // Точка пространства модели, отображаемая в левой верхней части экрана (смщещение по x и y)
   physvalue offsetX = 0;
   physvalue offsetY = 0;
-  physvalue framesPerSecond = 100;  // Количество кадров моделирования в секунду
+  //physvalue framesPerSecond = 100;  // Количество кадров моделирования в секунду
 
   bool simulationIsStarted = false;  // Флаг признака того, что процесс симуляции запущен
 

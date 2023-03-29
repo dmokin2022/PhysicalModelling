@@ -18,24 +18,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    Model/A_Particle.cpp \
-    Model/B_Spring.cpp \
+    Model/PhysicalValues.cpp \
+    Model/Particle.cpp \
+    Model/Spring.cpp \
     Model/Box.cpp \
-    Model/D_Space.cpp \
+    Model/Space.cpp \
     View.cpp  \
 
 HEADERS += \
     mainwindow.h \
-    Model/A_PhysicalValues.hpp \
-    Model/A_Particle.hpp \
+    Model/PhysicalValues.hpp \
+    Model/Particle.hpp \
     Model/Box.hpp \
-    Model/D_Space.hpp \
+    Model/Space.hpp \
+    Model/Spring.hpp \
     View.hpp \
 
 
 FORMS += \
     mainwindow.ui \
-    PhysicalModelling.ui
+    #PhysicalModelling.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

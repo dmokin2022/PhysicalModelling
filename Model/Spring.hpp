@@ -1,7 +1,7 @@
 #pragma once
 
 //#include <QObject>
-#include "A_Particle.hpp"
+#include "Particle.hpp"
 
 // Объект пружина для создания упругих тел
 class Spring {

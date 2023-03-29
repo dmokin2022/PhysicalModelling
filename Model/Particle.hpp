@@ -1,8 +1,9 @@
 #pragma once
 
+#include <QPen>
 #include <cmath>
 
-#include "A_PhysicalValues.hpp"
+#include "PhysicalValues.hpp"
 
 class Particle {
   //class Particle: public QObject {
@@ -21,6 +22,12 @@ public:
   physvalue ay;
   physvalue vx;  // проекции скорости
   physvalue vy;
+
+  QColor color;
+  //  QPen pen;
+  //  QBrush brush;
+  //  QPen(Qt::black),
+  //  QBrush (Qt::green)
 
   int springLinksCounter;  // счётчик числа связей частицы с другими частицами
   bool connectedWithNeighbours = false;

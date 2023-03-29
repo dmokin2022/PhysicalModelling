@@ -1,15 +1,16 @@
 
-#include "A_Particle.hpp"
+#include "Particle.hpp"
 
 #include <QObject>
 #include <cmath>
 
 Particle::Particle(physvalue x, physvalue y, physvalue r, physvalue m) {
-  this->x = x;
-  this->y = y;
-  this->z = 0;
-  this->r = r;
-  this->m = m;
+  this->x     = x;
+  this->y     = y;
+  this->z     = 0;
+  this->r     = r;
+  this->m     = m;
+  this->color = Qt::red;
 
   Fx = 0;
   Fy = 0;

@@ -1,8 +1,8 @@
 #include <QVector>
 
-#include "A_Particle.hpp"
-#include "B_Spring.hpp"
 #include "Box.hpp"
+#include "Particle.hpp"
+#include "Spring.hpp"
 
 // Описание пространства для физического взаимодействия
 class Space {

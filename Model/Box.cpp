@@ -2,7 +2,7 @@
 
 Box::Box() {
   top    = -10;
-  bottom = 20;
+  bottom = 30;
   left   = -10;
   right  = 40;
 }

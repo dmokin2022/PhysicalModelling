@@ -3,7 +3,7 @@
 
 //#include <QObject>
 
-#include "B_Spring.hpp"
+#include "Spring.hpp"
 
 #include <cmath>
 
