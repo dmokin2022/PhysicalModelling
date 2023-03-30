@@ -111,7 +111,7 @@ void View::test() {
 
   space.addParticleArray(0, 0, 1, 1, 7 * 7, 3);
 
-  //space.addSpringsToParticlesGroup(-1, -1, 100, 100, 5, 1000);
+  space.addSpringsToParticlesGroup(-1, -1, 100, 100, 5, 1000);
   initDraw();
   drawModel();
 }

@@ -13,8 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     view->test();
 
     // Привязка обработчиков нажатий к кнопкам
-    connect(ui->buttonRunSimulation, &QPushButton::clicked, view, &View::togleSimulation);
-    connect(ui->buttonStepSimulation, &QPushButton::clicked, view, &View::oneStepSimulation);
+    connect(ui->pushButton, &QPushButton::clicked, view, &View::togleSimulation);
+    connect(ui->pushButton_2, &QPushButton::clicked, view, &View::oneStepSimulation);
+    //ui->push
 //    connect(&ui->buttonRunSimulation, &QPushButton::clicked, view, &[this](){
 //        view->space.computeTimeFrame();
 //        view->drawModel();

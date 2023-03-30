@@ -37,7 +37,8 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui \
-    #PhysicalModelling.ui
+ \    #PhysicalModelling.ui
+    testwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
