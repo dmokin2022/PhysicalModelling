@@ -24,6 +24,8 @@ private:
     void runPushButtonHandler();
     void constPushButtonHandler();
 
+private slots:
+    void mouseClickedOver(qreal x, qreal y);
 
 
 signals:

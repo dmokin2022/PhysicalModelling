@@ -79,6 +79,19 @@ void Space::addSpringsToParticlesGroup(
   }
 }
 
+void Space::deleteAll()
+{
+    for (auto particle : particles) {
+        if (particle != nullptr) delete particle;
+    }
+    particles.clear();
+
+//    for (auto spring : springs) {
+//        delete spring;
+//    }
+    springs.clear();
+}
+
 // Расчёт силы гравитации на частицу
 void Space::computeGravityForce(Particle &p1) {
   p1.Fx += p1.m * gx;

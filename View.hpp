@@ -1,8 +1,8 @@
-
+#pragma once
 #include <QBrush>
 #include <QColor>
 #include <QGraphicsItemGroup>
-#include <QGraphicsScene>
+#include "graphicsscene.h"
 #include <QPainter>
 #include <QTimer>
 
@@ -27,7 +27,7 @@ public:
   Space space;
 
   // Создаём объект для графической сцены
-  QGraphicsScene *scene;
+  GraphicsScene *scene;
   QGraphicsItemGroup *boxGroup;
   QGraphicsItemGroup *particlesGroup;
 
@@ -45,7 +45,9 @@ public:
   void initDraw();
 
   void drawModel();
-
+  qreal physXfromScene(qreal x);
+  qreal physYfromScene(qreal y);
+  Particle* getParticleAtAlloc(qreal x, qreal y);
   void test();
 
 public slots:
@@ -53,8 +55,7 @@ public slots:
   // Обработчика нажатия на кнопку Пуск/Стоп
   void oneStepSimulation();
   void togleSimulation();
+  void restart();
+
 };
 
-//if __name__ == '__main__':
-//    view = View()
-//    view.test()

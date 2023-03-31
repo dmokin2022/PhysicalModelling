@@ -14,7 +14,7 @@ View::View() {
   //space = Space();
 
   // Создаём объект для графической сцены
-  scene = new QGraphicsScene();
+  scene = new GraphicsScene();
 
   //  painter = new QPainter();
   //  pen     = new QPen(Qt::green, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
@@ -98,6 +98,27 @@ void View::drawModel() {
   // win.graphicsView.setScene(scene)
 }
 
+qreal View::physXfromScene(qreal x)
+{
+    return (x - offsetX) / scale;
+}
+
+qreal View::physYfromScene(qreal y)
+{
+    return (y - offsetY) / scale;
+}
+
+Particle *View::getParticleAtAlloc(qreal x, qreal y)
+{
+    //Particle* result = nullptr;
+    for (auto particle : space.particles) {
+        if (particle->isIncludingPoint(x, y)) {
+            return particle;
+        }
+    }
+    return nullptr;
+}
+
 void View::showFrame() {
   if (simulationIsStarted) {
     space.computeTimeFrame();
@@ -123,6 +144,12 @@ void View::oneStepSimulation() {
 }
 
 void View::togleSimulation() { simulationIsStarted = !simulationIsStarted; }
+
+void View::restart()
+{
+    this->space.deleteAll();
+    this->test();
+}
 
 //if __name__ == '__main__':
 //    view = View()

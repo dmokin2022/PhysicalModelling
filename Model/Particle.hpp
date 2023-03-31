@@ -15,6 +15,7 @@ public:
 
   physvalue r;  // радиус
   physvalue m;  // масса
+  physvalue q;  // заряд (электрический)
 
   physvalue Fx;  // проекции силы
   physvalue Fy;
@@ -32,11 +33,12 @@ public:
   int springLinksCounter;  // счётчик числа связей частицы с другими частицами
   bool connectedWithNeighbours = false;
 
-  Particle(physvalue x, physvalue y, physvalue r = 1, physvalue m = 1);
+  Particle(physvalue x, physvalue y, physvalue r = 1, physvalue m = 1, physvalue q = 0);
   virtual ~Particle() {}
 
   physvalue getSumForce();
   void computeAcceleration();
   void computeVelocity();
   void computeMovement();
+  bool isIncludingPoint(physvalue px, physvalue py);
 };

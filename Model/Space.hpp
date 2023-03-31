@@ -47,6 +47,8 @@ public:
   void addSpring(Particle p1, Particle p2, physvalue k);
   void addSpringsToParticlesGroup(
       physvalue x1, physvalue y1, physvalue x2, physvalue y2, physvalue r, physvalue k);
+  void deleteAll();
+
   // Расчёт силы гравитации на частицу
   void computeGravityForce(Particle &p1);
   void computeAllForces();
@@ -58,6 +60,7 @@ public:
   void detectCollisionBetwinParticles(Particle &p1, Particle &p2);
   void detectCollisionWithWalls(Particle &p1);
   void computeTimeFrame();
+
 };
 
 //if __name__ == '__main__':
