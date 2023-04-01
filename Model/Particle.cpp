@@ -43,12 +43,16 @@ void Particle::computeMovement() {
   y = y + vy * dt_;
 }
 
+// Проверка на вхождение точки внутрь частицы (окружности с конечным радиусом)
 bool Particle::isIncludingPoint(physvalue px, physvalue py)
 {
     bool result = false;
     if (((x - r) < px) && (px < (x + r))) {
         if (((y - r) < py) && (py < (y + r))) {
-            result = true;
+            physvalue dx2 = (px - x); dx2 = dx2*dx2;
+            physvalue dy2 = (py - y); dy2 = dy2*dy2;
+            if ((dx2 + dy2) < r*r)
+                result = true;
         }
     }
     return result;

@@ -59,8 +59,9 @@ public:
   void unstickPartcles(Particle &p1, Particle &p2);
   void detectCollisionBetwinParticles(Particle &p1, Particle &p2);
   void detectCollisionWithWalls(Particle &p1);
-  void computeTimeFrame();
 
+  void computeTimeFrame();
+  void pushApartParticles();
 };
 
 //if __name__ == '__main__':

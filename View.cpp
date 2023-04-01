@@ -113,9 +113,11 @@ Particle *View::getParticleAtAlloc(qreal x, qreal y)
     //Particle* result = nullptr;
     for (auto particle : space.particles) {
         if (particle->isIncludingPoint(x, y)) {
+            selectedParticle = particle;
             return particle;
         }
     }
+
     return nullptr;
 }
 

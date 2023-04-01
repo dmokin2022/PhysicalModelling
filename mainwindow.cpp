@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "graphicsscene.h"
 
+#include <QLineEdit>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -13,12 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(view->scene);
     view->test();
 
-    // Привязка обработчиков нажатий к кнопкам
-    connect(ui->pushButtonPlay, &QPushButton::clicked, view, &View::togleSimulation);
-    connect(ui->pushButtonStep, &QPushButton::clicked, view, &View::oneStepSimulation);
-    connect(ui->pushButtonRestart, &QPushButton::clicked, view, &View::restart);
-    // Подключаем получение сигналов от нажатий мыши в сцене
-    connect(view->scene, &GraphicsScene::clicked_, this, &MainWindow::mouseClickedOver);
+    setConnections();
+
 
     //ui->push
 //    connect(&ui->buttonRunSimulation, &QPushButton::clicked, view, &[this](){
@@ -42,6 +40,20 @@ void MainWindow::runPushButtonHandler() {
 
 void MainWindow::constPushButtonHandler() {
     view->simulationIsStarted = !view->simulationIsStarted;
+}
+
+void MainWindow::setConnections()
+{
+    // Привязка обработчиков нажатий к кнопкам
+    connect(ui->pushButtonPlay, &QPushButton::clicked, view, &View::togleSimulation);
+    connect(ui->pushButtonStep, &QPushButton::clicked, view, &View::oneStepSimulation);
+    connect(ui->pushButtonRestart, &QPushButton::clicked, view, &View::restart);
+    // Подключаем получение сигналов от нажатий мыши в сцене
+    connect(view->scene, &GraphicsScene::clicked_, this, &MainWindow::mouseClickedOver);
+
+    connect(ui->lineEditRadius, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
+    connect(ui->lineEditMass, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
+    connect(ui->lineEditCharge, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
 }
 
 void MainWindow::mouseClickedOver(qreal x, qreal y)
@@ -68,5 +80,30 @@ void MainWindow::mouseClickedOver(qreal x, qreal y)
         ui->labelColor->setStyleSheet("");
     }
 
+}
+
+void MainWindow::propertiesChanged()
+{
+    // Проверка правильности ввода данных в поля
+    bool isValid = false;
+    physvalue value = 0;
+
+    value = ui->lineEditRadius->text().toFloat(&isValid);
+    if (isValid) {
+        view->selectedParticle->r = value;
+    }
+
+    value = ui->lineEditMass->text().toFloat(&isValid);
+    if (isValid) {
+        view->selectedParticle->m = value;
+    }
+
+    value = ui->lineEditCharge->text().toFloat(&isValid);
+    if (isValid) {
+        view->selectedParticle->q = value;
+    }
+
+    view->space.pushApartParticles();
+    view->drawModel();
 }
 

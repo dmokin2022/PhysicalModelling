@@ -23,9 +23,11 @@ private:
     // Обработчика нажатия на кнопку Пуск/Стоп
     void runPushButtonHandler();
     void constPushButtonHandler();
+    void setConnections();
 
 private slots:
     void mouseClickedOver(qreal x, qreal y);
+    void propertiesChanged();
 
 
 signals:

@@ -199,16 +199,16 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonStep">
+       <widget class="QPushButton" name="pushButtonPlay">
         <property name="text">
-         <string>Step</string>
+         <string>Play</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonPlay">
+       <widget class="QPushButton" name="pushButtonStep">
         <property name="text">
-         <string>Play</string>
+         <string>Step</string>
         </property>
        </widget>
       </item>

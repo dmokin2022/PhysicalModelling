@@ -15,6 +15,8 @@ public:
     physvalue dy;
     physvalue l;    // длина пружины. Опрделяется по начальному расстоянию между частицами
 
+    // Условно вязкость пружины
+    physvalue hookDecay;
 
     Spring(Particle &p1, Particle &p2, physvalue k = 1);
 

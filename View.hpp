@@ -25,6 +25,7 @@ public:
   bool simulationIsStarted = false;  // Флаг признака того, что процесс симуляции запущен
 
   Space space;
+  Particle* selectedParticle;
 
   // Создаём объект для графической сцены
   GraphicsScene *scene;

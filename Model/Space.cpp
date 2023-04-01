@@ -284,6 +284,24 @@ void Space::computeTimeFrame() {
   }
 }
 
+void Space::pushApartParticles() {
+  // Цикл прохода по всем частицам в списке
+  for (int i = 0; i < particles.size(); i++) {
+    // p1 = Particle();
+    Particle *p1 = particles[i];
+
+    // Поиск соударений частиц со стенками пространства
+    detectCollisionWithWalls(*p1);
+
+    // Цикл прохода по всем частицам в списке, кроме тех по которым уже прошли
+    for (int k = i + 1; k < particles.size(); k++) {
+      Particle *p2 = particles[k];
+
+      detectCollisionBetwinParticles(*p1, *p2);
+    }
+  }
+}
+
 //if __name__ == '__main__':
 //    space = Space();
 //    space.addParticle(0, 0, 1, 1)
