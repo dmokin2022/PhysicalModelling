@@ -4,7 +4,7 @@
 #include <QObject>
 #include <cmath>
 
-Particle::Particle(physvalue x, physvalue y, physvalue r, physvalue m, physvalue q) {
+Particle::Particle(physvalue x, physvalue y, physvalue r, physvalue m, physvalue q, QColor color) {
   this->x     = x;
   this->y     = y;
   this->z     = 0;
@@ -12,6 +12,7 @@ Particle::Particle(physvalue x, physvalue y, physvalue r, physvalue m, physvalue
   this->m     = m;
   this->q     = q;
   this->color = Qt::red;
+  this->isFilledWithColor = false;
 
   Fx = 0;
   Fy = 0;

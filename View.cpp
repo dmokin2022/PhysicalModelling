@@ -57,26 +57,6 @@ void View::drawModel() {
   // Создаём графическую сцену
   scene->addItem(particlesGroup);  // Добавляем группу к сцене
 
-  // Цикл прохода по всем частицам в пространстве
-  for (auto &p : space.particles) {
-    //Particle p = space.particles[i];
-
-    // Расчёт экранных координат и размеров объектов для отображения
-    int sx = (p->x - p->r - offsetX) * scale;
-    int sy = (p->y - p->r - offsetY) * scale;
-
-    int sr = p->r * scale;
-    int sh = 2 * sr;
-    int sw = sh;
-
-    // добавляем эллипс/круг в экранную группу изображений
-    QPen pen(p->color);
-    particlesGroup->addToGroup(scene->addEllipse(sx, sy, sw, sh, pen));
-
-    // Выводим координаты частицы для отладки
-    // xystr = str(str(p.x) + "," + str(p.y))
-    // particlesGroup.addToGroup(scene.addText(xystr))
-  }
 
   // Цикл прохода по всем пружинам в пространстве
   for (auto &spring : space.springs) {
@@ -94,6 +74,35 @@ void View::drawModel() {
     // добавляем линию в экранную группу изображений
     particlesGroup->addToGroup(scene->addLine(sx1, sy1, sx2, sy2, pen));
   }
+
+
+
+  // Цикл прохода по всем частицам в пространстве
+  for (auto &p : space.particles) {
+    //Particle p = space.particles[i];
+
+    // Расчёт экранных координат и размеров объектов для отображения
+    int sx = (p->x - p->r - offsetX) * scale;
+    int sy = (p->y - p->r - offsetY) * scale;
+
+    int sr = p->r * scale;
+    int sh = 2 * sr;
+    int sw = sh;
+
+    // добавляем эллипс/круг в экранную группу изображений
+    QPen pen(p->color);
+    QBrush brush;
+    if (p->isFilledWithColor) {
+        brush = QBrush(p->color);
+    }
+
+    particlesGroup->addToGroup(scene->addEllipse(sx, sy, sw, sh, pen, brush));
+
+    // Выводим координаты частицы для отладки
+    // xystr = str(str(p.x) + "," + str(p.y))
+    // particlesGroup.addToGroup(scene.addText(xystr))
+  }
+
 
   // win.graphicsView.setScene(scene)
 }

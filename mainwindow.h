@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "View.hpp"
+#include <QColorDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,14 +21,20 @@ private:
     Ui::MainWindow *ui;
     View *view;
 
+
+
     // Обработчика нажатия на кнопку Пуск/Стоп
     void runPushButtonHandler();
     void constPushButtonHandler();
     void setConnections();
 
+    void onChooseColor();
+
+
 private slots:
     void mouseClickedOver(qreal x, qreal y);
     void propertiesChanged();
+    void onFillColorChecked();
 
 
 signals:

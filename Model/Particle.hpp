@@ -25,6 +25,7 @@ public:
   physvalue vy;
 
   QColor color;
+  bool isFilledWithColor;
   //  QPen pen;
   //  QBrush brush;
   //  QPen(Qt::black),
@@ -33,7 +34,7 @@ public:
   int springLinksCounter;  // счётчик числа связей частицы с другими частицами
   bool connectedWithNeighbours = false;
 
-  Particle(physvalue x, physvalue y, physvalue r = 1, physvalue m = 1, physvalue q = 0);
+  Particle(physvalue x, physvalue y, physvalue r = 1, physvalue m = 1, physvalue q = 0, QColor color = Qt::red);
   virtual ~Particle() {}
 
   physvalue getSumForce();

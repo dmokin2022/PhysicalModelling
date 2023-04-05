@@ -4,6 +4,7 @@
 
 #include <QLineEdit>
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -54,6 +55,23 @@ void MainWindow::setConnections()
     connect(ui->lineEditRadius, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
     connect(ui->lineEditMass, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
     connect(ui->lineEditCharge, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
+
+    connect(ui->pushButtonColor, &QPushButton::clicked, this, &MainWindow::onChooseColor);
+    connect(ui->checkBoxFill, &QCheckBox::clicked, this, &MainWindow::onFillColorChecked);
+    //connect(ui->pushButtonColor, &QPushButton::clicked, this, &ui->colorDialog->open);
+}
+
+void MainWindow::onChooseColor()
+{
+    if (view->selectedParticle) {
+        view->selectedParticle->color = ui->colorDialog->getColor();
+
+        //QPalette palette(QPalette::Window, view->selectedParticle->color);
+        QPalette palette(view->selectedParticle->color);
+        ui->labelColor->setPalette(palette);
+    }
+    view->drawModel();
+
 }
 
 void MainWindow::mouseClickedOver(qreal x, qreal y)
@@ -71,13 +89,19 @@ void MainWindow::mouseClickedOver(qreal x, qreal y)
         ui->lineEditRadius->setText(QString::number(particle->r));
         ui->lineEditMass->setText(QString::number(particle->m));
         ui->lineEditCharge->setText(QString::number(particle->q));
-        ui->labelColor->setStyleSheet("background-color: RoyalBlue ");
+        //ui->labelColor->setStyleSheet("background-color: RoyalBlue ");
         //ui->labelColor->setStyle();
+        if (particle->isFilledWithColor) {
+            ui->checkBoxFill->setCheckState(Qt::CheckState::Checked);
+        } else {
+            ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
+        }
     } else {
         ui->lineEditRadius->setText("");
         ui->lineEditMass->setText("");
         ui->lineEditCharge->setText("");
         ui->labelColor->setStyleSheet("");
+        ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
     }
 
 }
@@ -103,7 +127,19 @@ void MainWindow::propertiesChanged()
         view->selectedParticle->q = value;
     }
 
+
     view->space.pushApartParticles();
+    view->drawModel();
+}
+
+void MainWindow::onFillColorChecked() {
+    if (view->selectedParticle) {
+        if (ui->checkBoxFill->isChecked()) {
+            view->selectedParticle->isFilledWithColor = true;
+        } else {
+            view->selectedParticle->isFilledWithColor = false;
+        }
+    }
     view->drawModel();
 }
 
