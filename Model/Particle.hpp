@@ -34,7 +34,8 @@ public:
   int springLinksCounter;  // счётчик числа связей частицы с другими частицами
   bool connectedWithNeighbours = false;
 
-  Particle(physvalue x, physvalue y, physvalue r = 1, physvalue m = 1, physvalue q = 0, QColor color = Qt::red);
+  Particle(physvalue x, physvalue y, physvalue r = 1, physvalue m = 1, physvalue q = 0,
+      QColor color = Qt::red);
   virtual ~Particle() {}
 
   physvalue getSumForce();
@@ -42,4 +43,9 @@ public:
   void computeVelocity();
   void computeMovement();
   bool isIncludingPoint(physvalue px, physvalue py);
+  physvalue getVAngle();
+
+private:
+  physvalue getCosByVector(physvalue x, physvalue y);
+  physvalue getAngleOfVector(physvalue x, physvalue y);
 };
