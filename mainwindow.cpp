@@ -11,11 +11,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
   // Установка окна для прорисовки графического вида физической модели
   ui->graphicsView->setScene(view->scene);
-  view->test();
+
+  view->testParticlesOnly();
+  //view->testWithSprings();
 
   setConnections();
 
-  //ui->push
   //    connect(&ui->buttonRunSimulation, &QPushButton::clicked, view, &[this](){
   //        view->space.computeTimeFrame();
   //        view->drawModel();
@@ -48,7 +49,7 @@ void MainWindow::setConnections() {
 
   connect(ui->pushButtonColor, &QPushButton::clicked, this, &MainWindow::onChooseColor);
   connect(ui->checkBoxFill, &QCheckBox::clicked, this, &MainWindow::onFillColorChecked);
-  //connect(ui->pushButtonColor, &QPushButton::clicked, this, &ui->colorDialog->open);
+  //connect(ui->dial, &QDial::valueChanged, this, &MainWindow::onAngleChanged);
 }
 
 void MainWindow::onChooseColor() {
@@ -87,12 +88,21 @@ void MainWindow::mouseClickedOver(qreal x, qreal y) {
     } else {
       ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
     }
+
+    // Отображение угла направления скорости
+    physvalue angle = particle->getVAngle();
+    physvalue v     = particle->getV();
+    ui->dial->setValue(360 - angle);
+    ui->lineEditAngle->setText(QString::number(angle));
+    ui->lineEditVelocity->setText(QString::number(v));
+
   } else {
     ui->lineEditRadius->setText("");
     ui->lineEditMass->setText("");
     ui->lineEditCharge->setText("");
     ui->labelColor->setStyleSheet("");
     ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
+    ui->dial->setValue(0);
   }
 }
 
@@ -110,6 +120,9 @@ void MainWindow::propertiesChanged() {
   value = ui->lineEditCharge->text().toFloat(&isValid);
   if (isValid) { view->selectedParticle->q = value; }
 
+  physvalue angle = view->selectedParticle->getVAngle();
+  ui->dial->setValue(angle);
+
   view->space.pushApartParticles();
   view->drawModel();
 }
@@ -123,4 +136,13 @@ void MainWindow::onFillColorChecked() {
     }
   }
   view->drawModel();
+}
+
+void MainWindow::onAngleChanged(int value) {
+  // Отображение угла направления скорости
+  //  physvalue angle = view->selectedParticle->getVAngle();
+  //  physvalue v     = view->selectedParticle->getV();
+  ui->dial->setValue(360 - value);
+  ui->lineEditAngle->setText(QString::number(value));
+  //ui->labelVelocity->setText(QString::number(v));
 }

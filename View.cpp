@@ -11,8 +11,8 @@ View::View() {
 
   simulationIsStarted = false;  // Флаг признака того, что процесс симуляции запущен
 
-  //space = Space();
-
+  templateParticle = new Particle(0, 0, 1, 1, 0, Qt::red);
+  selectedParticle = nullptr;
   // Создаём объект для графической сцены
   scene = new GraphicsScene();
 
@@ -57,77 +57,91 @@ void View::drawModel() {
   // Создаём графическую сцену
   scene->addItem(particlesGroup);  // Добавляем группу к сцене
 
-
   // Цикл прохода по всем пружинам в пространстве
-  for (auto &spring : space.springs) {
-    // пружины отображаются как простые отрезки, соединяющие центры частиц
-    //Spring spring = space.springs[i];
-
-    // расчёт экранных координат концов отрезка пружины
-    int sx1 = (spring.p1->x - offsetX) * scale;
-    int sy1 = (spring.p1->y - offsetY) * scale;
-
-    int sx2 = (spring.p2->x - offsetX) * scale;
-    int sy2 = (spring.p2->y - offsetY) * scale;
-
-    QPen pen(Qt::red);
-    // добавляем линию в экранную группу изображений
-    particlesGroup->addToGroup(scene->addLine(sx1, sy1, sx2, sy2, pen));
-  }
-
-
+  for (auto &spring : space.springs) { drawSpring(spring); }
 
   // Цикл прохода по всем частицам в пространстве
   for (auto &p : space.particles) {
-    //Particle p = space.particles[i];
-
-    // Расчёт экранных координат и размеров объектов для отображения
-    int sx = (p->x - p->r - offsetX) * scale;
-    int sy = (p->y - p->r - offsetY) * scale;
-
-    int sr = p->r * scale;
-    int sh = 2 * sr;
-    int sw = sh;
-
-    // добавляем эллипс/круг в экранную группу изображений
-    QPen pen(p->color);
-    QBrush brush;
-    if (p->isFilledWithColor) {
-        brush = QBrush(p->color);
-    }
-
-    particlesGroup->addToGroup(scene->addEllipse(sx, sy, sw, sh, pen, brush));
-
-    // Выводим координаты частицы для отладки
-    // xystr = str(str(p.x) + "," + str(p.y))
-    // particlesGroup.addToGroup(scene.addText(xystr))
+    drawParticle(p);
+    drawVectorAt(*p);
   }
 
+  //if (selectedParticle) drawVectorAt(*selectedParticle);
 
   // win.graphicsView.setScene(scene)
 }
 
-qreal View::physXfromScene(qreal x)
-{
-    return (x - offsetX) / scale;
+void View::drawParticle(Particle *p) {
+  //Particle p = space.particles[i];
+
+  // Расчёт экранных координат и размеров объектов для отображения
+  int sx = (p->x - p->r - offsetX) * scale;
+  int sy = (p->y - p->r - offsetY) * scale;
+
+  int sr = p->r * scale;
+  int sh = 2 * sr;
+  int sw = sh;
+
+  // добавляем эллипс/круг в экранную группу изображений
+  QPen pen(p->color);
+  QBrush brush;
+  if (p->isFilledWithColor) { brush = QBrush(p->color); }
+
+  particlesGroup->addToGroup(scene->addEllipse(sx, sy, sw, sh, pen, brush));
+
+  // Выводим координаты частицы для отладки
+  // xystr = str(str(p.x) + "," + str(p.y))
+  // particlesGroup.addToGroup(scene.addText(xystr))
 }
 
-qreal View::physYfromScene(qreal y)
-{
-    return (y - offsetY) / scale;
+void View::drawSpring(Spring spring) {
+  // пружины отображаются как простые отрезки, соединяющие центры частиц
+  //Spring spring = space.springs[i];
+
+  // расчёт экранных координат концов отрезка пружины
+  int sx1 = (spring.p1->x - offsetX) * scale;
+  int sy1 = (spring.p1->y - offsetY) * scale;
+
+  int sx2 = (spring.p2->x - offsetX) * scale;
+  int sy2 = (spring.p2->y - offsetY) * scale;
+
+  QPen pen(Qt::red);
+  // добавляем линию в экранную группу изображений
+  particlesGroup->addToGroup(scene->addLine(sx1, sy1, sx2, sy2, pen));
 }
 
-Particle *View::getParticleAtAlloc(qreal x, qreal y)
-{
-    //Particle* result = nullptr;
-    for (auto particle : space.particles) {
-        if (particle->isIncludingPoint(x, y)) {
-            selectedParticle = particle;
-            return particle;
-        }
+void View::drawVectorAt(Particle &p) {
+  QPen pen(Qt::green);
+  //QBrush brush;
+  qreal vr  = p.r / p.getV();
+  qreal vxr = p.vx * vr;
+  qreal vyr = p.vy * vr;
+
+  // Прорисовка стенок пространства
+  // Расчёт экранных координат и размеров объектов для отображения
+  physvalue x1 = (p.x - offsetX) * scale;
+  physvalue y1 = (p.y - offsetY) * scale;
+
+  physvalue x2 = (p.x + vxr - offsetX) * scale;
+  physvalue y2 = (p.y + vyr - offsetY) * scale;
+
+  particlesGroup->addToGroup(scene->addLine(x1, y1, x2, y2, pen));
+}
+
+qreal View::physXfromScene(qreal x) { return (x - offsetX) / scale; }
+
+qreal View::physYfromScene(qreal y) { return (y - offsetY) / scale; }
+
+Particle *View::getParticleAtAlloc(qreal x, qreal y) {
+  //Particle* result = nullptr;
+  for (auto particle : space.particles) {
+    if (particle->isIncludingPoint(x, y)) {
+      selectedParticle = particle;
+      return particle;
     }
+  }
 
-    return nullptr;
+  return nullptr;
 }
 
 void View::showFrame() {
@@ -137,13 +151,20 @@ void View::showFrame() {
   }
 }
 
-void View::test() {
+void View::testWithSprings() {
   scene->addText("Hello, world!");
   scene->addEllipse(0, 0, 20, 20);
 
   space.addParticleArray(0, 0, 1, 1, 7 * 7, 3);
 
   space.addSpringsToParticlesGroup(-1, -1, 100, 100, 5, 1000);
+  initDraw();
+  drawModel();
+}
+
+void View::testParticlesOnly() {
+  space.addParticleArray(0, 0, 1, 1, 7 * 7, 3);
+
   initDraw();
   drawModel();
 }
@@ -156,10 +177,9 @@ void View::oneStepSimulation() {
 
 void View::togleSimulation() { simulationIsStarted = !simulationIsStarted; }
 
-void View::restart()
-{
-    this->space.deleteAll();
-    this->test();
+void View::restart() {
+  this->space.deleteAll();
+  this->testParticlesOnly();
 }
 
 //if __name__ == '__main__':

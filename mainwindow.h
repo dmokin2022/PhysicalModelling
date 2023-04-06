@@ -35,6 +35,7 @@ private slots:
   void mouseClickedOver(qreal x, qreal y);
   void propertiesChanged();
   void onFillColorChecked();
+  void onAngleChanged(int value);
 
 signals:
   void runSimulation();

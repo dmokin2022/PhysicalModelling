@@ -2,7 +2,6 @@
 #include <QBrush>
 #include <QColor>
 #include <QGraphicsItemGroup>
-#include "graphicsscene.h"
 #include <QPainter>
 #include <QTimer>
 
@@ -10,6 +9,7 @@
 #include "Model/Particle.hpp"
 #include "Model/Space.hpp"
 #include "Model/Spring.hpp"
+#include "graphicsscene.h"
 
 class View : public QObject {
   Q_OBJECT
@@ -25,17 +25,13 @@ public:
   bool simulationIsStarted = false;  // Флаг признака того, что процесс симуляции запущен
 
   Space space;
-  Particle* selectedParticle;
+  Particle *selectedParticle;
+  Particle *templateParticle;  // шаблонная частица с типовыми значениями
 
-  // Создаём объект для графической сцены
+  // Oбъект для графической сцены
   GraphicsScene *scene;
   QGraphicsItemGroup *boxGroup;
   QGraphicsItemGroup *particlesGroup;
-
-  //  QPainter *painter;
-  //  QPen *pen;
-  //  QColor &color;
-  //  QBrush &brush;
 
   // Настройка таймера для генерации кадров
   QTimer timer;
@@ -46,10 +42,13 @@ public:
   void initDraw();
 
   void drawModel();
+
   qreal physXfromScene(qreal x);
   qreal physYfromScene(qreal y);
-  Particle* getParticleAtAlloc(qreal x, qreal y);
-  void test();
+  Particle *getParticleAtAlloc(qreal x, qreal y);
+
+  void testWithSprings();
+  void testParticlesOnly();
 
 public slots:
   void showFrame();  // обработчик таймера
@@ -58,5 +57,8 @@ public slots:
   void togleSimulation();
   void restart();
 
+private:
+  void drawParticle(Particle *p);
+  void drawSpring(Spring spring);
+  void drawVectorAt(Particle &particle);
 };
-

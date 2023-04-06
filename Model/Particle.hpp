@@ -44,6 +44,7 @@ public:
   void computeMovement();
   bool isIncludingPoint(physvalue px, physvalue py);
   physvalue getVAngle();
+  physvalue getV();
 
 private:
   physvalue getCosByVector(physvalue x, physvalue y);

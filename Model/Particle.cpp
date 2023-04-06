@@ -11,7 +11,7 @@ Particle::Particle(physvalue x, physvalue y, physvalue r, physvalue m, physvalue
   this->r                 = r;
   this->m                 = m;
   this->q                 = q;
-  this->color             = Qt::red;
+  this->color             = color;
   this->isFilledWithColor = false;
 
   Fx = 0;
@@ -63,6 +63,7 @@ physvalue Particle::getCosByVector(physvalue x, physvalue y) {
   return y / std::sqrt(x * x + y * y);
 }
 
+#define M_PI 3.14159265358979323846 /* pi */
 physvalue Particle::getAngleOfVector(physvalue x, physvalue y) {
   physvalue cosv    = getCosByVector(x, y);
   physvalue arccosv = std::acos(cosv);
@@ -73,7 +74,17 @@ physvalue Particle::getAngleOfVector(physvalue x, physvalue y) {
   } else if (vx < 0) {
     angle = -arccosv;
   }
-  return angle;
+  return angle * 180 / M_PI;
 }
 
 physvalue Particle::getVAngle() { return getAngleOfVector(vx, vy); }
+
+// Возвращает модуль (длину) вектора
+physvalue Particle::getV() {
+  physvalue l = std::sqrt(x * x + y * y);
+  if (l < almostZero) {
+    return almostZero;
+  } else {
+    return l;
+  }
+}
