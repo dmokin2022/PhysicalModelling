@@ -16,10 +16,6 @@ View::View() {
   // Создаём объект для графической сцены
   scene = new GraphicsScene();
 
-  //  painter = new QPainter();
-  //  pen     = new QPen(Qt::green, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-  //  painter->setPen(*pen);
-
   // Настройка таймера для генерации кадров
   // Подключаем функцию, которая будет запускаться по таймеру
   connect(&this->timer, &QTimer::timeout, this, &View::showFrame);
@@ -85,7 +81,16 @@ void View::drawParticle(Particle *p) {
   // добавляем эллипс/круг в экранную группу изображений
   QPen pen(p->color);
   QBrush brush;
+
   if (p->isFilledWithColor) { brush = QBrush(p->color); }
+
+  // Рисование рамки вокруг выбранной частцы
+  if (p == selectedParticle) {
+      //  painter = new QPainter();
+      pen = QPen(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+      //pen = QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+      //  painter->setPen(*pen);
+  }
 
   particlesGroup->addToGroup(scene->addEllipse(sx, sy, sw, sh, pen, brush));
 

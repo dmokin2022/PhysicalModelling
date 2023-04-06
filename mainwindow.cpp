@@ -58,13 +58,24 @@ void MainWindow::onChooseColor() {
 
     view->selectedParticle->color = color;
 
+    setLabelColor(color);
+//    QPalette palette = ui->labelColor->palette();
+//    palette.setColor(ui->labelColor->backgroundRole(), color);
+//    palette.setColor(ui->labelColor->foregroundRole(), color);
+//    ui->labelColor->setPalette(palette);
+  }
+
+  view->drawModel();
+}
+
+void MainWindow::setLabelColor(QColor color) {
+    //ui->labelColor->setStyleSheet("background-color: RoyalBlue ");
+    //ui->labelColor->setStyle();
+
     QPalette palette = ui->labelColor->palette();
     palette.setColor(ui->labelColor->backgroundRole(), color);
     palette.setColor(ui->labelColor->foregroundRole(), color);
     ui->labelColor->setPalette(palette);
-  }
-
-  view->drawModel();
 }
 
 void MainWindow::mouseClickedOver(qreal x, qreal y) {
@@ -77,17 +88,17 @@ void MainWindow::mouseClickedOver(qreal x, qreal y) {
 
   Particle *particle = view->getParticleAtAlloc(px, py);
   if (particle != nullptr) {
-    //ui->labelXY->selectedText();
+
     ui->lineEditRadius->setText(QString::number(particle->r));
     ui->lineEditMass->setText(QString::number(particle->m));
     ui->lineEditCharge->setText(QString::number(particle->q));
-    //ui->labelColor->setStyleSheet("background-color: RoyalBlue ");
-    //ui->labelColor->setStyle();
     if (particle->isFilledWithColor) {
       ui->checkBoxFill->setCheckState(Qt::CheckState::Checked);
     } else {
       ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
     }
+
+    setLabelColor(particle->color);
 
     // Отображение угла направления скорости
     physvalue angle = particle->getVAngle();
@@ -95,6 +106,8 @@ void MainWindow::mouseClickedOver(qreal x, qreal y) {
     ui->dial->setValue(360 - angle);
     ui->lineEditAngle->setText(QString::number(angle));
     ui->lineEditVelocity->setText(QString::number(v));
+
+    view->drawModel();
 
   } else {
     ui->lineEditRadius->setText("");

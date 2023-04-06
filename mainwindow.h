@@ -30,6 +30,7 @@ private:
   void setConnections();
 
   void onChooseColor();
+  void setLabelColor(QColor color);
 
 private slots:
   void mouseClickedOver(qreal x, qreal y);
