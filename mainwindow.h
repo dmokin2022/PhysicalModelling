@@ -38,6 +38,26 @@ private slots:
   void onFillColorChecked();
   void onAngleChanged(int value);
 
+  void on_toolButton_2_clicked();
+
+  void on_toolButton_4_clicked();
+
+  void on_toolButton_6_clicked();
+
+  void on_toolButton_5_clicked();
+
+  void on_toolButton_3_clicked();
+
+  void on_toolButton_clicked();
+
+  void on_toolButton_7_clicked();
+
+  void on_toolButtonPlay_clicked();
+
+  void on_toolButtonOneStep_clicked();
+
+  void on_toolButtonRestart_clicked();
+
 signals:
   void runSimulation();
   void stepSimulation();

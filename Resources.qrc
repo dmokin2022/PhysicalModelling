@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>Resources/Icons/icons8_pause.ico</file>
+        <file>Resources/Icons/icons8_play.ico</file>
+        <file>Resources/Icons/icons8_restart.ico</file>
+        <file>Resources/Icons/icons8_resume_button.ico</file>
+        <file>Resources/Icons/icons8_circle.ico</file>
+        <file>Resources/Icons/icons8_connect.ico</file>
+    </qresource>
+    <qresource prefix="/sounds"/>
+</RCC>

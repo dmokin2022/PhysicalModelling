@@ -37,9 +37,9 @@ void MainWindow::constPushButtonHandler() {
 
 void MainWindow::setConnections() {
   // Привязка обработчиков нажатий к кнопкам
-  connect(ui->pushButtonPlay, &QPushButton::clicked, view, &View::togleSimulation);
-  connect(ui->pushButtonStep, &QPushButton::clicked, view, &View::oneStepSimulation);
-  connect(ui->pushButtonRestart, &QPushButton::clicked, view, &View::restart);
+//  connect(ui->pushButtonPlay, &QPushButton::clicked, view, &View::togleSimulation);
+//  connect(ui->pushButtonStep, &QPushButton::clicked, view, &View::oneStepSimulation);
+//  connect(ui->pushButtonRestart, &QPushButton::clicked, view, &View::restart);
   // Подключаем получение сигналов от нажатий мыши в сцене
   connect(view->scene, &GraphicsScene::clicked_, this, &MainWindow::mouseClickedOver);
 
@@ -158,4 +158,55 @@ void MainWindow::onAngleChanged(int value) {
   ui->dial->setValue(360 - value);
   ui->lineEditAngle->setText(QString::number(value));
   //ui->labelVelocity->setText(QString::number(v));
+}
+
+void MainWindow::on_toolButton_2_clicked()
+{
+
+}
+
+void MainWindow::on_toolButton_4_clicked()
+{
+
+}
+
+void MainWindow::on_toolButton_6_clicked()
+{
+
+}
+
+void MainWindow::on_toolButton_5_clicked()
+{
+
+}
+
+void MainWindow::on_toolButton_3_clicked()
+{
+
+}
+
+void MainWindow::on_toolButton_clicked()
+{
+
+}
+
+void MainWindow::on_toolButton_7_clicked()
+{
+
+}
+
+void MainWindow::on_toolButtonPlay_clicked()
+{
+    //view->simulationIsStarted = !view->simulationIsStarted;
+    view->togleSimulation();
+}
+
+void MainWindow::on_toolButtonOneStep_clicked()
+{
+    view->oneStepSimulation();
+}
+
+void MainWindow::on_toolButtonRestart_clicked()
+{
+    view->restart();
 }
