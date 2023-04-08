@@ -137,24 +137,26 @@ void MainWindow::onMouseClickedOverView(qreal x, qreal y) {
 }
 
 void MainWindow::onPropertiesChanged() {
-  // Проверка правильности ввода данных в поля
-  bool isValid    = false;
-  physvalue value = 0;
+  if (view->selectedParticle) {
+      // Проверка правильности ввода данных в поля
+      bool isValid    = false;
+      physvalue value = 0;
 
-  value = ui->lineEditRadius->text().toFloat(&isValid);
-  if (isValid) { view->selectedParticle->r = value; }
+      value = ui->lineEditRadius->text().toFloat(&isValid);
+      if (isValid) { view->selectedParticle->r = value; }
 
-  value = ui->lineEditMass->text().toFloat(&isValid);
-  if (isValid) { view->selectedParticle->m = value; }
+      value = ui->lineEditMass->text().toFloat(&isValid);
+      if (isValid) { view->selectedParticle->m = value; }
 
-  value = ui->lineEditCharge->text().toFloat(&isValid);
-  if (isValid) { view->selectedParticle->q = value; }
+      value = ui->lineEditCharge->text().toFloat(&isValid);
+      if (isValid) { view->selectedParticle->q = value; }
 
-  physvalue angle = view->selectedParticle->getVAngle();
-  ui->dial->setValue(angle);
+      physvalue angle = view->selectedParticle->getVAngle();
+      ui->dial->setValue(angle);
 
-  view->space.pushApartParticles();
-  view->drawModel();
+      view->space.pushApartParticles();
+      view->drawModel();
+  }
 }
 
 void MainWindow::onFillColorChecked() {
@@ -230,7 +232,7 @@ void MainWindow::on_toolButtonRestart_clicked()
 
 void MainWindow::on_toolButtonAddParticle_clicked()
 {
-    controller->toggleAddingSpringMode();
+    controller->toggleAddingParticleMode();
 }
 
 void MainWindow::on_toolButtonAddSpring_clicked()

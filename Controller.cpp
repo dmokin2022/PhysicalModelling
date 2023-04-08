@@ -15,7 +15,7 @@ void Controller::testWithSprings() {
 //  scene->addText("Hello, world!");
 //  scene->addEllipse(0, 0, 20, 20);
 
-  space->addParticleArray(0, 0, 1, 1, 7 * 7, 3);
+  space->addParticleArray(0, 0, 1, 1, 10 * 10, 3);
 
   space->addSpringsToParticlesGroup(-1, -1, 100, 100, 5, 1000);
   view->initDraw();
@@ -23,7 +23,7 @@ void Controller::testWithSprings() {
 }
 
 void Controller::testParticlesOnly() {
-  space->addParticleArray(0, 0, 1, 1, 7 * 7, 3);
+  space->addParticleArray(0, 0, 1, 1, 10 * 10, 3);
 
   view->initDraw();
   view->drawModel();

@@ -170,7 +170,7 @@ void View::testWithSprings() {
 }
 
 void View::testParticlesOnly() {
-  space.addParticleArray(0, 0, 1, 1, 7 * 7, 3);
+  space.addParticleArray(0, 0, 1, 1, 10 * 10, 3);
 
   initDraw();
   drawModel();

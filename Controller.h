@@ -22,10 +22,6 @@ class Controller: public QObject {
 public:
     Controller(Space& space, View& view);
 
-    // Построение готовых тестовых структур
-    void testWithSprings();
-    void testParticlesOnly();
-
     // Переключение режимов редактирования
     void toggleAddingParticleMode();
     void toggleAddingSpringMode();
@@ -37,6 +33,11 @@ public:
     Spring* addSpringBetweenParticles(Particle &p1, Particle &p2);
     void deleteSpringAtCursorPosition();
     void editOperationAtAlloc(qreal x, qreal y);
+
+    // Построение готовых тестовых структур
+    void testWithSprings();
+    void testParticlesOnly();
+
 
 private:
     int lastOperation;
