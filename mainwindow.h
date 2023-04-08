@@ -4,6 +4,7 @@
 #include <QColorDialog>
 #include <QMainWindow>
 
+#include "Controller.h"
 #include "View.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -22,6 +23,7 @@ public:
 private:
   Ui::MainWindow *ui;
   View *view;
+  Controller *controller;
   QColorDialog colorDialog;
 
   // Обработчика нажатия на кнопку Пуск/Стоп
@@ -31,32 +33,27 @@ private:
 
   void onChooseColor();
   void setLabelColor(QColor color);
+  void showParticleProperties(Particle *p);
 
 private slots:
-  void mouseClickedOver(qreal x, qreal y);
-  void propertiesChanged();
+  void onMouseClickedOverView(qreal x, qreal y);
+  void onPropertiesChanged();
   void onFillColorChecked();
   void onAngleChanged(int value);
-
   void on_toolButton_2_clicked();
-
   void on_toolButton_4_clicked();
-
   void on_toolButton_6_clicked();
-
   void on_toolButton_5_clicked();
-
   void on_toolButton_3_clicked();
-
   void on_toolButton_clicked();
-
   void on_toolButton_7_clicked();
-
   void on_toolButtonPlay_clicked();
-
   void on_toolButtonOneStep_clicked();
-
   void on_toolButtonRestart_clicked();
+  void on_toolButtonAddParticle_clicked();
+  void on_toolButtonAddSpring_clicked();
+
+  void on_toolButtonDelete_clicked();
 
 signals:
   void runSimulation();

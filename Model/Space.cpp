@@ -19,11 +19,19 @@ Space::Space() {
 }
 
 // Добавление одной частицы
-void Space::addParticle(physvalue x, physvalue y, physvalue r, physvalue m) {
+Particle* Space::addParticle(physvalue x, physvalue y, physvalue r, physvalue m) {
   //particles.append(Particle(x, y, r, m));
   //Particle p(x, y, r, m);
   Particle *p = new Particle(x, y, r, m);
   particles.append(p);  // в массив помещается копия объекта
+  return p;
+}
+
+Particle* Space::addParticle(Particle &p)
+{
+    Particle *newParticle = new Particle{p};
+    particles.append(newParticle);
+    return newParticle;
 }
 
 // Добавление квадратного массива из одинаковых частиц

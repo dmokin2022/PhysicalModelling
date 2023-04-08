@@ -133,6 +133,8 @@ void View::drawVectorAt(Particle &p) {
   particlesGroup->addToGroup(scene->addLine(x1, y1, x2, y2, pen));
 }
 
+//physvalue View::
+
 qreal View::physXfromScene(qreal x) { return (x - offsetX) / scale; }
 
 qreal View::physYfromScene(qreal y) { return (y - offsetY) / scale; }

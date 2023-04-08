@@ -1,3 +1,4 @@
+#pragma once
 #include <QVector>
 
 #include "Box.hpp"
@@ -40,7 +41,10 @@ public:
   Space();
 
   // Добавление одной частицы
-  void addParticle(physvalue x, physvalue y, physvalue r, physvalue m);
+  Particle* addParticle(physvalue x, physvalue y, physvalue r, physvalue m);
+
+  Particle* addParticle(Particle &p); // копирование по образцу
+
   // Добавление квадратного массива из одинаковых частиц
   void addParticleArray(
       physvalue x, physvalue y, physvalue r, physvalue m, int count, physvalue distance);

@@ -7,7 +7,9 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+
   view = new View();
+  controller = new Controller(view->space, *view);
 
   // Установка окна для прорисовки графического вида физической модели
   ui->graphicsView->setScene(view->scene);
@@ -41,11 +43,11 @@ void MainWindow::setConnections() {
 //  connect(ui->pushButtonStep, &QPushButton::clicked, view, &View::oneStepSimulation);
 //  connect(ui->pushButtonRestart, &QPushButton::clicked, view, &View::restart);
   // Подключаем получение сигналов от нажатий мыши в сцене
-  connect(view->scene, &GraphicsScene::clicked_, this, &MainWindow::mouseClickedOver);
+  connect(view->scene, &GraphicsScene::clicked_, this, &MainWindow::onMouseClickedOverView);
 
-  connect(ui->lineEditRadius, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
-  connect(ui->lineEditMass, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
-  connect(ui->lineEditCharge, &QLineEdit::textChanged, this, &MainWindow::propertiesChanged);
+  connect(ui->lineEditRadius, &QLineEdit::textChanged, this, &MainWindow::onPropertiesChanged);
+  connect(ui->lineEditMass, &QLineEdit::textChanged, this, &MainWindow::onPropertiesChanged);
+  connect(ui->lineEditCharge, &QLineEdit::textChanged, this, &MainWindow::onPropertiesChanged);
 
   connect(ui->pushButtonColor, &QPushButton::clicked, this, &MainWindow::onChooseColor);
   connect(ui->checkBoxFill, &QCheckBox::clicked, this, &MainWindow::onFillColorChecked);
@@ -78,48 +80,63 @@ void MainWindow::setLabelColor(QColor color) {
     ui->labelColor->setPalette(palette);
 }
 
-void MainWindow::mouseClickedOver(qreal x, qreal y) {
+void MainWindow::showParticleProperties(Particle *p)
+{
+    // Если курсор попал на частицу
+    if (p != nullptr) {
+      QString sx = QString::number(p->x);
+      QString sy = QString::number(p->y);
+      ui->labelXY->setText(sx + ", " + sy);
+
+      ui->lineEditRadius->setText(QString::number(p->r));
+      ui->lineEditMass->setText(QString::number(p->m));
+      ui->lineEditCharge->setText(QString::number(p->q));
+      if (p->isFilledWithColor) {
+        ui->checkBoxFill->setCheckState(Qt::CheckState::Checked);
+      } else {
+        ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
+      }
+
+      setLabelColor(p->color);
+
+      // Отображение угла направления скорости
+      physvalue angle = p->getVAngle();
+      physvalue v     = p->getV();
+      ui->dial->setValue(360 - angle);
+      ui->lineEditAngle->setText(QString::number(angle));
+      ui->lineEditVelocity->setText(QString::number(v));
+
+      view->drawModel();
+
+    } else {
+      // Если курсор мыши не попал на частицу
+      ui->lineEditRadius->setText("");
+      ui->lineEditMass->setText("");
+      ui->lineEditCharge->setText("");
+      ui->labelColor->setStyleSheet("");
+      ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
+      ui->dial->setValue(0);
+    }
+
+}
+
+void MainWindow::onMouseClickedOverView(qreal x, qreal y) {
   auto px = view->physXfromScene(x);
   auto py = view->physXfromScene(y);
 
-  QString sx = QString::number(px);
-  QString sy = QString::number(py);
-  ui->labelXY->setText(sx + ", " + sy);
+//  QString sx = QString::number(px);
+//  QString sy = QString::number(py);
+//  ui->labelXY->setText(sx + ", " + sy);
 
   Particle *particle = view->getParticleAtAlloc(px, py);
-  if (particle != nullptr) {
 
-    ui->lineEditRadius->setText(QString::number(particle->r));
-    ui->lineEditMass->setText(QString::number(particle->m));
-    ui->lineEditCharge->setText(QString::number(particle->q));
-    if (particle->isFilledWithColor) {
-      ui->checkBoxFill->setCheckState(Qt::CheckState::Checked);
-    } else {
-      ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
-    }
+  controller->editOperationAtAlloc(x, y);
 
-    setLabelColor(particle->color);
+  showParticleProperties(particle);
 
-    // Отображение угла направления скорости
-    physvalue angle = particle->getVAngle();
-    physvalue v     = particle->getV();
-    ui->dial->setValue(360 - angle);
-    ui->lineEditAngle->setText(QString::number(angle));
-    ui->lineEditVelocity->setText(QString::number(v));
-
-    view->drawModel();
-
-  } else {
-    ui->lineEditRadius->setText("");
-    ui->lineEditMass->setText("");
-    ui->lineEditCharge->setText("");
-    ui->labelColor->setStyleSheet("");
-    ui->checkBoxFill->setCheckState(Qt::CheckState::Unchecked);
-    ui->dial->setValue(0);
-  }
 }
 
-void MainWindow::propertiesChanged() {
+void MainWindow::onPropertiesChanged() {
   // Проверка правильности ввода данных в поля
   bool isValid    = false;
   physvalue value = 0;
@@ -209,4 +226,19 @@ void MainWindow::on_toolButtonOneStep_clicked()
 void MainWindow::on_toolButtonRestart_clicked()
 {
     view->restart();
+}
+
+void MainWindow::on_toolButtonAddParticle_clicked()
+{
+    controller->toggleAddingSpringMode();
+}
+
+void MainWindow::on_toolButtonAddSpring_clicked()
+{
+    controller->toggleAddingSpringMode();
+}
+
+void MainWindow::on_toolButtonDelete_clicked()
+{
+    controller->toggleDeleteMode();
 }

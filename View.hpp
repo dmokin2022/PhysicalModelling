@@ -27,6 +27,8 @@ public:
   Space space;
   Particle *selectedParticle;
   Particle *templateParticle;  // шаблонная частица с типовыми значениями
+  Spring *selectedSpring;
+  Spring *templateSpring;   // шаблонная пружина
 
   // Oбъект для графической сцены
   GraphicsScene *scene;
