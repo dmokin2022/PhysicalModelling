@@ -11,12 +11,16 @@ public:
     GraphicsScene();
 signals:
     void clicked_(qreal x, qreal y);
+    void moved_(qreal x, qreal y);
 
 
 private:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    //void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    qreal prevX;
+    qreal prevY;
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 };
 

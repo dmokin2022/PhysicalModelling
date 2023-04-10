@@ -37,6 +37,7 @@ private:
 
 private slots:
   void onMouseClickedOverView(qreal x, qreal y);
+  void onMouseMovedOverView(qreal x, qreal y);
   void onPropertiesChanged();
   void onFillColorChecked();
   void onAngleChanged(int value);

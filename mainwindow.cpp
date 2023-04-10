@@ -44,6 +44,8 @@ void MainWindow::setConnections() {
 //  connect(ui->pushButtonRestart, &QPushButton::clicked, view, &View::restart);
   // Подключаем получение сигналов от нажатий мыши в сцене
   connect(view->scene, &GraphicsScene::clicked_, this, &MainWindow::onMouseClickedOverView);
+  connect(view->scene, &GraphicsScene::moved_, this, &MainWindow::onMouseMovedOverView);
+
 
   connect(ui->lineEditRadius, &QLineEdit::textChanged, this, &MainWindow::onPropertiesChanged);
   connect(ui->lineEditMass, &QLineEdit::textChanged, this, &MainWindow::onPropertiesChanged);
@@ -128,11 +130,20 @@ void MainWindow::onMouseClickedOverView(qreal x, qreal y) {
 //  QString sy = QString::number(py);
 //  ui->labelXY->setText(sx + ", " + sy);
 
+
   Particle *particle = view->getParticleAtAlloc(px, py);
 
   controller->editOperationAtAlloc(x, y);
 
   showParticleProperties(particle);
+
+}
+
+void MainWindow::onMouseMovedOverView(qreal x, qreal y) {
+//    if (QApplication::mouseButtons().testFlag(Qt::LeftButton)) {
+//    }
+
+
 
 }
 
