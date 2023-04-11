@@ -28,7 +28,7 @@ public:
   Particle *selectedParticle;
   Particle *templateParticle;  // шаблонная частица с типовыми значениями
   Spring *selectedSpring;
-  Spring *templateSpring;   // шаблонная пружина
+  Spring *templateSpring;  // шаблонная пружина
 
   // Oбъект для графической сцены
   GraphicsScene *scene;
@@ -47,6 +47,9 @@ public:
 
   qreal physXfromScene(qreal x);
   qreal physYfromScene(qreal y);
+  qreal sceneXfromPhys(qreal x);
+  qreal sceneYfromPhys(qreal y);
+
   Particle *getParticleAtAlloc(qreal x, qreal y);
 
   void testWithSprings();

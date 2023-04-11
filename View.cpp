@@ -86,10 +86,10 @@ void View::drawParticle(Particle *p) {
 
   // Рисование рамки вокруг выбранной частцы
   if (p == selectedParticle) {
-      //  painter = new QPainter();
-      pen = QPen(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-      //pen = QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-      //  painter->setPen(*pen);
+    //  painter = new QPainter();
+    pen = QPen(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    //pen = QPen(Qt::gray, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+    //  painter->setPen(*pen);
   }
 
   particlesGroup->addToGroup(scene->addEllipse(sx, sy, sw, sh, pen, brush));
@@ -134,6 +134,9 @@ void View::drawVectorAt(Particle &p) {
 }
 
 //physvalue View::
+qreal View::sceneXfromPhys(qreal x) { return (x - offsetX) * scale; }
+
+qreal View::sceneYfromPhys(qreal y) { return (y - offsetY) * scale; }
 
 qreal View::physXfromScene(qreal x) { return (x - offsetX) / scale; }
 

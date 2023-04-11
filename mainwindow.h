@@ -35,6 +35,9 @@ private:
   void setLabelColor(QColor color);
   void showParticleProperties(Particle *p);
 
+  qreal moveOffsetX;
+  qreal moveOffsetY;
+
 private slots:
   void onMouseClickedOverView(qreal x, qreal y);
   void onMouseMovedOverView(qreal x, qreal y);
